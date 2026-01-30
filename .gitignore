@@ -1,24 +1,35 @@
-# Virtual environment
+# ===============================
+# Virtual environments
+# ===============================
 dental_env/
 venv/
+env/
 
-# Large datasets
+# ===============================
+# Large datasets / generated data
+# ===============================
 images/
 masks/
 cropped_images/
 raw_subjects/
 batch_results/
+ensemble_results/
 
+# ===============================
+# Model weights (DO NOT UPLOAD)
+# ===============================
+*.pth
+
+# ===============================
 # Python cache
+# ===============================
 __pycache__/
 *.pyc
 
-# Jupyter / OS
+# ===============================
+# Jupyter / OS / Editor
+# ===============================
 .ipynb_checkpoints/
 .DS_Store
-venv/
-__pycache__/
-.ipynb_checkpoints/
 .env
-.DS_Store
-
+.vscode/

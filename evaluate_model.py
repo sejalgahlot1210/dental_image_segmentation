@@ -31,7 +31,7 @@ def dice_score(pred, gt):
     pred = pred > 0
     gt = gt > 0
     inter = np.logical_and(pred, gt).sum()
-    return 2 * inter / (pred.sum() + gt.sum() + 1e-6)
+    return (2 * inter) / (pred.sum() + gt.sum() + 1e-6)
 
 def iou_score(pred, gt):
     pred = pred > 0
@@ -40,11 +40,34 @@ def iou_score(pred, gt):
     union = np.logical_or(pred, gt).sum()
     return inter / (union + 1e-6)
 
+def pixel_accuracy(pred, gt):
+    pred = pred > 0
+    gt = gt > 0
+    return np.mean(pred == gt)
+
+def precision_score(pred, gt):
+    pred = pred > 0
+    gt = gt > 0
+    tp = np.logical_and(pred, gt).sum()
+    fp = np.logical_and(pred, np.logical_not(gt)).sum()
+    return tp / (tp + fp + 1e-6)
+
+def recall_score(pred, gt):
+    pred = pred > 0
+    gt = gt > 0
+    tp = np.logical_and(pred, gt).sum()
+    fn = np.logical_and(np.logical_not(pred), gt).sum()
+    return tp / (tp + fn + 1e-6)
+
+# ================= DATA =================
 image_dir = "cropped_images"
 mask_dir = "masks"
 
 dice_scores = []
 iou_scores = []
+pixel_scores = []
+precision_scores = []
+recall_scores = []
 
 for mask_name in os.listdir(mask_dir):
 
@@ -73,9 +96,16 @@ for mask_name in os.listdir(mask_dir):
 
     dice_scores.append(dice_score(pred, gt_mask))
     iou_scores.append(iou_score(pred, gt_mask))
+    pixel_scores.append(pixel_accuracy(pred, gt_mask))
+    precision_scores.append(precision_score(pred, gt_mask))
+    recall_scores.append(recall_score(pred, gt_mask))
 
+# ================= RESULTS =================
 print("======================================")
 print("Total test images:", len(dice_scores))
-print("Average Dice Score:", np.mean(dice_scores))
-print("Average IoU Score :", np.mean(iou_scores))
+print(f"Average Dice Score     : {np.mean(dice_scores):.4f}")
+print(f"Average IoU Score      : {np.mean(iou_scores):.4f}")
+print(f"Pixel Accuracy         : {np.mean(pixel_scores):.4f}")
+print(f"Precision              : {np.mean(precision_scores):.4f}")
+print(f"Recall                 : {np.mean(recall_scores):.4f}")
 print("======================================")
